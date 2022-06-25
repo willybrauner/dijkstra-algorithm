@@ -15,32 +15,22 @@ it("should work with 2D matrix", () => {
     [2, 3, 1, 1, 9, 4, 4, 5, 8, 1],
   ]
 
-  const getNeighbors = (vertex, graph = matrix) => {
-    const [y, x] = vertex[0]
-    const up = graph?.[y - 1]?.[x]
-    const down = graph?.[y + 1]?.[x]
-    const prev = graph?.[y]?.[x - 1]
-    const next = graph?.[y]?.[x + 1]
+  const getNeighbors = ([y, x], graph = matrix) => [
+    ...(graph?.[y - 1]?.[x] ? [[y - 1, x]] : []),
+    ...(graph?.[y + 1]?.[x] ? [[y + 1, x]] : []),
+    ...(graph?.[y]?.[x + 1] ? [[y, x + 1]] : []),
+    ...(graph?.[y]?.[x - 1] ? [[y, x - 1]] : []),
+  ]
 
-    return [
-      ...(up ? [[y - 1, x], up] : []),
-      ...(down ? [[y + 1, x], down] : []),
-      ...(next ? [[y, x + 1], next] : []),
-      ...(prev ? [[y, x - 1], prev] : []),
-    ]
-  }
+  const distanceBetweenTwoVertices = (d, [y2, x2], graph = matrix) =>
+    d + graph[y2][x2]
 
-  const costBetweenTwoVertices = (a, b) => {}
+  const isTarget = (vertex, target = [9, 9]) =>
+    vertex.every((coord, i) => coord === target[i])
 
-  const isTarget = (a) => {}
-
-  type TCoord = [number, number]
-  type TCost = number
-  type TVertex = [TCoord, TCost][]
-
-  const distance = dijkstra<TVertex[]>(
+  const distance = dijkstra<[number, number]>(
     getNeighbors,
-    costBetweenTwoVertices,
+    distanceBetweenTwoVertices,
     [0, 0],
     isTarget
   )

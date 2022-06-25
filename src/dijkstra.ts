@@ -1,3 +1,4 @@
+import { logicalExpression } from "@babel/types"
 import { priorityQueue } from "./priorityQueue"
 
 const { log } = console
@@ -16,37 +17,54 @@ const { log } = console
  * @param isTarget
  */
 export function dijkstra<GVertex>(
-  getNeighbors: (v: GVertex, graph) => GVertex[],
-  distanceBetweenTwoVertices: (a: GVertex, b: GVertex) => number,
+  getNeighbors: (v: GVertex, graph?) => GVertex[],
+  distanceBetweenTwoVertices: (a: number, b: GVertex, graph?) => number,
   source: GVertex,
-  isTarget: (a: GVertex) => boolean,
+  isTarget: (vertex: GVertex, target?) => boolean,
   queue = priorityQueue()
 ): number {
 
   const distances = new Map()
   distances.set(source, 0)
   queue.enqueue([source, 0])
-  // let finalDistance: number
+  let finalDistance: number = 0
+
+  let count = 0
 
   while (!queue.isEmpty()) {
     const shortestVertex = queue.dequeue()
+    log('--------------------------------shortestVertex',shortestVertex)
     const currentVertex = shortestVertex[0]
+    log("currentVertex",currentVertex)
     const neighborVertices = getNeighbors(currentVertex)
+    log('neighborVertices',neighborVertices)
 
     if (isTarget(currentVertex)) {
-      return shortestVertex[1]
-      // finalDistance = shortestVertex[1]
-      // break
+      finalDistance = shortestVertex[1]
+      break
     }
 
     for (const neighborVertex of neighborVertices) {
-      const newDistance = distanceBetweenTwoVertices(currentVertex, neighborVertex)
+      log("distances", distances)
+      log('distances.get(currentVertex)',distances.get(currentVertex))
+      const newDistance = distanceBetweenTwoVertices(distances.get(currentVertex), neighborVertex)
+      log('neighborVertex',neighborVertex)
+      log('newDistance',newDistance, distances.get(neighborVertex))
+      
+      
       if (newDistance < (distances.get(neighborVertex) || Infinity)) {
         distances.set(neighborVertex, newDistance)
         queue.enqueue([neighborVertex, newDistance])
-      }
+        
+      }   
     }
+
+    count ++
+          log("queue.collection",queue.collection)
+
+    if(count === 12)  break
+    
   }
 
- // return finalDistance
+  return finalDistance
 }

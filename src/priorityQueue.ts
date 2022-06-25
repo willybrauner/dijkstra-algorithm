@@ -29,5 +29,6 @@ export function priorityQueue<T = any>() {
     isEmpty,
     dequeue,
     enqueue,
+    collection
   })
 }
