@@ -1,5 +1,8 @@
-import { logicalExpression } from "@babel/types"
 import { priorityQueue } from "./priorityQueue"
+//import { Map } from "immutable"
+const { Map, fromJS } = require('immutable')
+
+
 
 const { log } = console
 
@@ -24,9 +27,9 @@ export function dijkstra<GVertex>(
   queue = priorityQueue()
 ): number {
 
-  const distances = new Map()
-  distances.set(source, 0)
-  queue.enqueue([source, 0])
+  let distances = new Map()
+  distances = distances.set(fromJS(source), 0)
+  queue.enqueue([fromJS(source), 0])
   let finalDistance: number = 0
 
   let count = 0
@@ -53,17 +56,18 @@ export function dijkstra<GVertex>(
       
       
       if (newDistance < (distances.get(neighborVertex) || Infinity)) {
-        distances.set(neighborVertex, newDistance)
-        queue.enqueue([neighborVertex, newDistance])
+        distances = distances.set(neighborVertex, newDistance)
+        queue.enqueue([fromJS(neighborVertex), newDistance])
         
       }   
     }
 
     count ++
-          log("queue.collection",queue.collection)
+   log("queue.collection",queue.collection)
 
-    if(count === 12)  break
+    //if(count === 1)  break
     
+    log('finalDistance',finalDistance)
   }
 
   return finalDistance
