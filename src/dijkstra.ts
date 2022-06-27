@@ -1,16 +1,5 @@
 import { priorityQueue } from "./priorityQueue"
-//import { Map } from "immutable"
-const { Map, fromJS } = require('immutable')
-
-
-
 const { log } = console
-
-// graph terminology
-// source (start)
-// target (end)
-// vertex (sommet)
-// vertices (sommets)
 
 /**
  * dijkstra
@@ -27,16 +16,14 @@ export function dijkstra<GVertex>(
   queue = priorityQueue()
 ): number {
 
-  let distances = new Map()
-  distances = distances.set(fromJS(source), 0)
-  queue.enqueue([fromJS(source), 0])
+  let distances = { [`${source}`] : 0 }  
+  queue.enqueue([source, 0])
   let finalDistance: number = 0
 
   let count = 0
 
   while (!queue.isEmpty()) {
     const shortestVertex = queue.dequeue()
-    log('--------------------------------shortestVertex',shortestVertex)
     const currentVertex = shortestVertex[0]
     log("currentVertex",currentVertex)
     const neighborVertices = getNeighbors(currentVertex)
@@ -49,26 +36,24 @@ export function dijkstra<GVertex>(
 
     for (const neighborVertex of neighborVertices) {
       log("distances", distances)
-      log('distances.get(currentVertex)',distances.get(currentVertex))
-      const newDistance = distanceBetweenTwoVertices(distances.get(currentVertex), neighborVertex)
+      log('distances[`${currentVertex}`])',distances[`${currentVertex}`])
+      const newDistance = distanceBetweenTwoVertices(distances[`${currentVertex}`], neighborVertex)
       log('neighborVertex',neighborVertex)
-      log('newDistance',newDistance, distances.get(neighborVertex))
+      log('newDistance',newDistance, distances[`${neighborVertex}`])
       
-      
-      if (newDistance < (distances.get(neighborVertex) || Infinity)) {
-        distances = distances.set(neighborVertex, newDistance)
-        queue.enqueue([fromJS(neighborVertex), newDistance])
+      if (newDistance < (distances[`${neighborVertex}`] || Infinity)) {
+        distances[`${neighborVertex}`] = newDistance
+        queue.enqueue([neighborVertex, newDistance])
         
       }   
     }
 
     count ++
-   log("queue.collection",queue.collection)
-
-    //if(count === 1)  break
+    log("queue.collection",queue.collection)
+    //if(count === 12)  break
     
-    log('finalDistance',finalDistance)
   }
 
+  log("finalDistance",finalDistance)
   return finalDistance
 }
