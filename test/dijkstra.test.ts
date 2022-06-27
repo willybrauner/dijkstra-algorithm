@@ -14,16 +14,16 @@ it("should work with 2D matrix", () => {
     [1, 2, 9, 3, 1, 3, 8, 5, 2, 1],
     [2, 3, 1, 1, 9, 4, 4, 5, 8, 1],
   ]
+  
+  const getNeighbors = ([y, x], graph = matrix) =>
+    [
+      [y - 1, x],
+      [y + 1, x],
+      [y, x + 1],
+      [y, x - 1],
+    ].reduce((a, [pY, pX]) => [...a, ...(graph?.[pY]?.[pX] ? [[pY, pX]] : [])], [])
 
-  const getNeighbors = ([y, x], graph = matrix) => [
-    ...(graph?.[y - 1]?.[x] ? [[y - 1, x]] : []),
-    ...(graph?.[y + 1]?.[x] ? [[y + 1, x]] : []),
-    ...(graph?.[y]?.[x + 1] ? [[y, x + 1]] : []),
-    ...(graph?.[y]?.[x - 1] ? [[y, x - 1]] : []),
-  ]
-
-  const distanceBetweenTwoVertices = (d, [y2, x2], graph = matrix) =>
-    d + graph[y2][x2]
+  const distanceBetweenTwoVertices = (d, [y2, x2], graph = matrix) => d + graph[y2][x2]
 
   const isTarget = (vertex, target = [9, 9]) =>
     vertex.every((coord, i) => coord === target[i])
@@ -34,4 +34,6 @@ it("should work with 2D matrix", () => {
     [0, 0],
     isTarget
   )
+
+  expect(distance).toBe(40)
 })
