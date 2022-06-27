@@ -1,10 +1,10 @@
 /**
  * Priority queue
  */
-export function priorityQueue<T = any>() {
-  const collection: T[] = []
+export function priorityQueue<T>() {
+  const collection: [T,number][] = []
   const isEmpty = (): boolean => collection.length === 0
-  const enqueue = (element: T): void => {
+  const enqueue = (element: [T, number]): void => {
     if (isEmpty()) {
       collection.push(element)
     } else {
@@ -21,7 +21,7 @@ export function priorityQueue<T = any>() {
       }
     }
   }
-  const dequeue = (): T | undefined => {
+  const dequeue = (): [T,number] | undefined => {
     let value = collection.shift()
     return value
   }
