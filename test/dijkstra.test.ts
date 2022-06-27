@@ -14,7 +14,7 @@ it("should work with 2D matrix", () => {
     [1, 2, 9, 3, 1, 3, 8, 5, 2, 1],
     [2, 3, 1, 1, 9, 4, 4, 5, 8, 1],
   ]
-  
+
   const getNeighbors = ([y, x], graph = matrix) =>
     [
       [y - 1, x],
@@ -32,6 +32,32 @@ it("should work with 2D matrix", () => {
     getNeighbors,
     distanceBetweenTwoVertices,
     [0, 0],
+    isTarget
+  )
+
+  expect(distance).toBe(40)
+})
+
+it("should work with Object graph", () => {
+  const graph = {
+    start: { A: 5, B: 2 },
+    A: { start: 1, C: 4, D: 2 },
+    B: { A: 8, D: 7 },
+    C: { D: 6, finish: 3 },
+    D: { finish: 1 },
+    finish: {},
+  }
+
+  const getNeighbors = (vertex) => Object.keys(graph[vertex])
+
+  const distanceBetweenTwoVertices = (d, vertex) => d + graph[vertex]
+
+  const isTarget = (vertex, target = "finish") => vertex === target
+
+  const distance = dijkstra<string>(
+    getNeighbors,
+    distanceBetweenTwoVertices,
+    "start",
     isTarget
   )
 
