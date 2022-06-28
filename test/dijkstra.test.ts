@@ -23,14 +23,14 @@ it("should work with 2D matrix", () => {
       [y, x - 1],
     ].reduce((a, [pY, pX]) => [...a, ...(matrix?.[pY]?.[pX] ? [[pY, pX]] : [])], [])
 
-  const distanceBetweenTwoVertices = (_, [y2, x2]) => matrix[y2][x2]
+  const getCostBetweenVertices = (_, [y2, x2]) => matrix[y2][x2]
 
   const isTarget = (vertex) =>
     vertex.every((coord, i) => coord === [9,9][i])
 
   const distance = dijkstra<[number, number]>(
     getNeighbors,
-    distanceBetweenTwoVertices,
+    getCostBetweenVertices,
     [0, 0],
     isTarget
   )

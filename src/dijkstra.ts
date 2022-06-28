@@ -4,13 +4,17 @@ const { log } = console
 /**
  * dijkstra
  * @param getNeighbors
- * @param distanceBetweenTwoVertices
+ * @param getCostBetweenVertices
  * @param source
  * @param isTarget
+ * @param queue
+ *
+ * TODO
+ * - improve priorityQueue with heap
  */
 export function dijkstra<GVertex>(
   getNeighbors: (v: GVertex) => GVertex[],
-  distanceBetweenTwoVertices: (a: GVertex, b: GVertex) => number,
+  getCostBetweenVertices: (a: GVertex, b: GVertex) => number,
   source: GVertex,
   isTarget: (vertex: GVertex) => boolean,
   queue = priorityQueue<GVertex>()
@@ -35,7 +39,7 @@ export function dijkstra<GVertex>(
     for (const neighborVertex of neighborVertices) {
       // log("distances", distances)
       // log('distances[`${currentVertex}`])',distances[`${currentVertex}`])
-      const newDistance = distances[`${currentVertex}`] + distanceBetweenTwoVertices(
+      const newDistance = distances[`${currentVertex}`] + getCostBetweenVertices(
         currentVertex,
         neighborVertex
       )
