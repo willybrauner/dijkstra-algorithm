@@ -9,10 +9,10 @@ const { log } = console
  * @param isTarget
  */
 export function dijkstra<GVertex>(
-  getNeighbors: (v: GVertex, graph?) => GVertex[],
-  distanceBetweenTwoVertices: (a: number, b: GVertex, graph?) => number,
+  getNeighbors: (v: GVertex) => GVertex[],
+  distanceBetweenTwoVertices: (a: number, b: GVertex) => number,
   source: GVertex,
-  isTarget: (vertex: GVertex, target?) => boolean,
+  isTarget: (vertex: GVertex) => boolean,
   queue = priorityQueue<GVertex>()
 ): number {
   let distances = { [`${source}`]: 0 }

@@ -15,18 +15,18 @@ it("should work with 2D matrix", () => {
     [2, 3, 1, 1, 9, 4, 4, 5, 8, 1],
   ]
 
-  const getNeighbors = ([y, x], graph = matrix) =>
+  const getNeighbors = ([y, x]) =>
     [
       [y - 1, x],
       [y + 1, x],
       [y, x + 1],
       [y, x - 1],
-    ].reduce((a, [pY, pX]) => [...a, ...(graph?.[pY]?.[pX] ? [[pY, pX]] : [])], [])
+    ].reduce((a, [pY, pX]) => [...a, ...(matrix?.[pY]?.[pX] ? [[pY, pX]] : [])], [])
 
-  const distanceBetweenTwoVertices = (d, [y2, x2], graph = matrix) => d + graph[y2][x2]
+  const distanceBetweenTwoVertices = (d, [y2, x2]) => d + matrix[y2][x2]
 
-  const isTarget = (vertex, target = [9, 9]) =>
-    vertex.every((coord, i) => coord === target[i])
+  const isTarget = (vertex) =>
+    vertex.every((coord, i) => coord === [9,9][i])
 
   const distance = dijkstra<[number, number]>(
     getNeighbors,
@@ -52,7 +52,7 @@ it("should work with Object graph", () => {
 
   const distanceBetweenTwoVertices = (d, vertex) => d + graph[vertex]
 
-  const isTarget = (vertex, target = "finish") => vertex === target
+  const isTarget = (vertex) => vertex === "finish"
 
   const distance = dijkstra<string>(
     getNeighbors,
