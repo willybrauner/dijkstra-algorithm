@@ -10,7 +10,7 @@ const { log } = console
  */
 export function dijkstra<GVertex>(
   getNeighbors: (v: GVertex) => GVertex[],
-  distanceBetweenTwoVertices: (a: number, b: GVertex) => number,
+  distanceBetweenTwoVertices: (a: GVertex, b: GVertex) => number,
   source: GVertex,
   isTarget: (vertex: GVertex) => boolean,
   queue = priorityQueue<GVertex>()
@@ -35,8 +35,8 @@ export function dijkstra<GVertex>(
     for (const neighborVertex of neighborVertices) {
       // log("distances", distances)
       // log('distances[`${currentVertex}`])',distances[`${currentVertex}`])
-      const newDistance = distanceBetweenTwoVertices(
-        distances[`${currentVertex}`],
+      const newDistance = distances[`${currentVertex}`] + distanceBetweenTwoVertices(
+        currentVertex,
         neighborVertex
       )
       // log('neighborVertex',neighborVertex)

@@ -23,7 +23,7 @@ it("should work with 2D matrix", () => {
       [y, x - 1],
     ].reduce((a, [pY, pX]) => [...a, ...(matrix?.[pY]?.[pX] ? [[pY, pX]] : [])], [])
 
-  const distanceBetweenTwoVertices = (d, [y2, x2]) => d + matrix[y2][x2]
+  const distanceBetweenTwoVertices = (_, [y2, x2]) => matrix[y2][x2]
 
   const isTarget = (vertex) =>
     vertex.every((coord, i) => coord === [9,9][i])
@@ -50,7 +50,7 @@ it("should work with Object graph", () => {
 
   const getNeighbors = (vertex) => Object.keys(graph[vertex])
 
-  const distanceBetweenTwoVertices = (d, vertex) => d + graph[vertex]
+  const distanceBetweenTwoVertices = (v1, v2) => graph[v1][v2]
 
   const isTarget = (vertex) => vertex === "finish"
 
@@ -61,5 +61,5 @@ it("should work with Object graph", () => {
     isTarget
   )
 
-  expect(distance).toBe(40)
+  expect(distance).toBe(8)
 })
