@@ -13,7 +13,7 @@ export function dijkstra<GVertex>(
   distanceBetweenTwoVertices: (a: number, b: GVertex, graph?) => number,
   source: GVertex,
   isTarget: (vertex: GVertex, target?) => boolean,
-  queue = priorityQueue<[GVertex, number]>()
+  queue = priorityQueue<GVertex>()
 ): number {
   let distances = { [`${source}`]: 0 }
   queue.enqueue([source, 0])
