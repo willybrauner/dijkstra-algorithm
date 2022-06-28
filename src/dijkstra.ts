@@ -7,10 +7,6 @@ const { log } = console
  * @param getCostBetweenVertices
  * @param source
  * @param isTarget
- * @param queue
- *
- * TODO
- * - improve priorityQueue with heap
  */
 export function dijkstra<GVertex>(
   getNeighbors: (v: GVertex) => GVertex[],
