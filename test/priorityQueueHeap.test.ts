@@ -1,21 +1,21 @@
-import {priorityQueueHeap} from "../src/priorityQueueHeap"
+import { priorityQueueHeap } from "../src/priorityQueueHeap"
 
-it('should work with heap', ()=> {
-    
-    const queue = priorityQueueHeap()
-    queue.enqueue(["A", 10])
-    queue.enqueue(["B", 20])
-    queue.enqueue(["D", 25])
-    queue.enqueue(["C", 5])
+it("should work with heap", () => {
+  const queue = priorityQueueHeap("min")
+  queue.enqueue("A", 100)
+  queue.enqueue("A", 30)
+  queue.enqueue("A", 29)
+  queue.enqueue("A", 27)
+  queue.enqueue("A", 24)
+  queue.enqueue("A", 20)
+  queue.enqueue("A", 19)
+  queue.enqueue("A", 17)
+  queue.enqueue("A", 12)
 
-    expect(queue.heap).toStrictEqual(
-        [
-            // null,
-            // {priority: 5, value: "C"}, 
-            // {priority: 10, value: "A"},
-            // {priority: 20, value: "B"},
-            // {priority: 25, value: "D"},
-        ]
-    )
+  console.log(queue.heap)
 
+  for (let index = 1; index < Math.floor(queue.heap.length / 2); index++) {
+    expect(queue.heap[index * 2].priority).toBeGreaterThan(queue.heap[index].priority)
+    expect(queue.heap[index * 2 + 1].priority).toBeGreaterThan(queue.heap[index].priority)
+  }
 })
