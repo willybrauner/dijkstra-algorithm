@@ -1,29 +1,44 @@
+import { log } from "console";
 import { priorityQueueHeap } from "../src/priorityQueueHeap"
 
-const queue = priorityQueueHeap("min")
+function dump(queue) {
+  function dumpAt(i) {
+    log('  '.repeat(Math.log2(i)) + queue.heap[i].priority)
+    if (i*2 < queue.heap.length) dumpAt(2*i)
+    if (i*2+1 < queue.heap.length) dumpAt(2*i+1)
+  }
+  dumpAt(1)
+}
+
+function makeQueue(priorities: number[]) {
+  const queue = priorityQueueHeap("min")
+  priorities.forEach(p => queue.enqueue("A", p))
+  return queue;
+}
+
+function checkInvariant(queue) {
+  for (let i = 1; i <= Math.floor(queue.heap.length / 2); i++) {
+    if (i*2 < queue.heap.length) {
+      expect(queue.heap[i * 2].priority).toBeGreaterThan(queue.heap[i].priority)
+    }
+    if (i*2+1 < queue.heap.length) {
+      expect(queue.heap[i * 2 + 1].priority).toBeGreaterThan(queue.heap[i].priority)
+    }
+  }
+}
 
 it("should insert item properly in heap", () => {
-  ;[100, 30, 29, 27, 24, 20, 19, 17, 12].forEach((e) => {
-    queue.enqueue("A", e)
-  })
-  console.log(queue.heap)
-
-  for (let index = 1; index < Math.floor(queue.heap.length / 2); index++) {
-    expect(queue.heap[index * 2].priority).toBeGreaterThan(queue.heap[index].priority)
-    expect(queue.heap[index * 2 + 1].priority).toBeGreaterThan(queue.heap[index].priority)
-  }
+  const queue = makeQueue([100, 30, 29, 27, 24, 20, 19, 17, 12]);
+  checkInvariant(queue);
 })
 
 it("should remove item properly from heap", () => {
-  
-  // last item become the first  
-  const firstHeapItem = queue.heap[1]
+  const queue = makeQueue([100, 30, 29, 27, 24, 20, 19, 17, 12]);
+  log('before dequeue:')
+  dump(queue)
   const item = queue.dequeue()
-  expect(item.priority).toBe(firstHeapItem.priority)
-  console.log(queue.heap)
-
-//   for (let index = 1; index < Math.floor(queue.heap.length / 2); index++) {
-//       expect(queue.heap[index * 2].priority).toBeGreaterThan(queue.heap[index].priority)
-//       expect(queue.heap[index * 2 + 1].priority).toBeGreaterThan(queue.heap[index].priority)
-//     }
+  log('after dequeue:')
+  dump(queue)
+  expect(item.priority).toBe(12);
+  checkInvariant(queue);
 })
