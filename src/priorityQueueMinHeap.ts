@@ -71,23 +71,24 @@ export function priorityQueueMinHeap<T>() {
       return node
     }
 
+    // La première étape consiste à supprimer le dernier élément
+    // du tas et à le définir comme premier élément.
     const node = heap[1]
     let x = heap.pop()
     heap[1] = x
-    
-    // La première étape consiste à supprimer le dernier élément
-    // du tas et à le définir comme premier élément. 
+
     log(node, heap)
 
     let index = 1
     let [left, right] = [2 * index, 2 * index + 1]
     let childIndex = heap[right]?.priority >= heap[left].priority ? right : left
     
-    while (heap?.[childIndex]?.priority >= heap?.[index]?.priority) {
-      // invert parent node and node in heap
+    while (!!heap[childIndex] && heap[index].priority <= heap[childIndex].priority) {
+      // invert child node and node in heap
       // update there indexs
       _swapPositionsInHeapByIndex(index, childIndex)
       index = childIndex
+      let [left, right] = [2 * index, 2 * index + 1]
       childIndex = heap[right]?.priority >= heap[left].priority ? right : left
     }
 
