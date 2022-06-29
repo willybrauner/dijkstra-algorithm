@@ -1,9 +1,9 @@
 import { log } from "console";
-import { priorityQueueHeap } from "../src/priorityQueueHeap"
+import { priorityQueueMinHeap } from "../src/priorityQueueMinHeap"
 
 function dump(queue) {
   function dumpAt(i) {
-    log('  '.repeat(Math.log2(i)) + queue.heap[i].priority)
+    log('|  '.repeat(Math.log2(i))  + '├─' + queue.heap[i].priority)
     if (i*2 < queue.heap.length) dumpAt(2*i)
     if (i*2+1 < queue.heap.length) dumpAt(2*i+1)
   }
@@ -11,7 +11,7 @@ function dump(queue) {
 }
 
 function makeQueue(priorities: number[]) {
-  const queue = priorityQueueHeap("min")
+  const queue = priorityQueueMinHeap()
   priorities.forEach(p => queue.enqueue("A", p))
   return queue;
 }

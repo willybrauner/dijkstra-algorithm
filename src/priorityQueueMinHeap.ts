@@ -5,8 +5,8 @@ const { log } = console
  *
  * Goal is not to maintain an update a strict order list
  * but to be sure that:
- *  - (nodeIndex * 2) & (nodeIndex * 2 + 1) are smaller (or greater) than nodeIndex priority in heap
- *  - floor(nodeIndex / 2) is bigger than
+ *  - (nodeIndex * 2) & (nodeIndex * 2 + 1) are greater than nodeIndex priority in heap
+ *  - floor(nodeIndex / 2) is smaller than heap[nodeIndex]
  *
  * heap example after insertion:
  *     [
@@ -20,8 +20,20 @@ const { log } = console
  *
  * @doc: https://en.wikipedia.org/wiki/Heap_(data_structure)
  */
-export function priorityQueueHeap<T>(type: "min" | "max" = "min") {
+export function priorityQueueMinHeap<T>() {
   const heap = [null]
+
+  /**
+   * Swipe positions in heap by index
+   * @param i 
+   * @param j 
+   */
+  const _swapPositionsInHeapByIndex = (i:number,j:number): void => {
+    let x = heap[i];
+    heap[i] = heap[j];
+    heap[j] = x;
+  }
+
   /**
    * enqueue
    * Insert value is priority in appropriate position in heap
@@ -35,11 +47,7 @@ export function priorityQueueHeap<T>(type: "min" | "max" = "min") {
     let nodeIndex = heap.length - 1
     let parentNodeIndex = Math.floor(nodeIndex / 2)
 
-    while (
-      type === "min"
-        ? node.priority < heap?.[parentNodeIndex]?.priority
-        : node.priority > heap?.[parentNodeIndex]?.priority
-    ) {
+    while (node.priority < heap?.[parentNodeIndex]?.priority) {
       // invert parent node and node in heap
       // update there indexs
       const parentNode = heap[parentNodeIndex]
@@ -48,49 +56,45 @@ export function priorityQueueHeap<T>(type: "min" | "max" = "min") {
       nodeIndex = parentNodeIndex
       parentNodeIndex = Math.floor(nodeIndex / 2)
     }
-
-    // log(heap)
   }
 
   /**
    * dequeue
    * Remove item from heap
+   * - La priorité du nœud inséré ne peut pas être supérieure à celle de son parent.
+     - Chaque niveau du tas doit être plein, sauf le niveau le plus bas, qui se remplit de gauche à droite.
    */
   const dequeue = () => {
-    // if (heap.length < 3) {
-    //   const toReturn = heap.pop()
-    //   heap[0] = null
-    //   return toReturn
-    // }
-
+    if (heap.length < 3) {
+      const node = heap.pop()
+      heap[0] = null
+      return node
+    }
 
     const node = heap[1]
-    heap[1] = heap.pop()
+    let x = heap.pop()
+    heap[1] = x
+    
+    // La première étape consiste à supprimer le dernier élément
+    // du tas et à le définir comme premier élément. 
+    log(node, heap)
 
     let index = 1
     let [left, right] = [2 * index, 2 * index + 1]
-  
-    let childIndex = 
-    type === "min" 
-      ? heap[right]?.priority >= heap[left].priority ? right : left
-      : heap[right]?.priority <= heap[left].priority ? right : left
-
-
-    while (
-      type === "min"
-      ? heap[index].priority <= heap?.[childIndex]?.priority
-      : heap[index].priority >= heap?.[childIndex]?.priority
-    ){
-      heap[childIndex] = heap[index]
-      heap[index] = heap[childIndex]
+    let childIndex = heap[right]?.priority >= heap[left].priority ? right : left
+    
+    while (heap?.[childIndex]?.priority >= heap?.[index]?.priority) {
+      // invert parent node and node in heap
+      // update there indexs
+      _swapPositionsInHeapByIndex(index, childIndex)
+      index = childIndex
+      childIndex = heap[right]?.priority >= heap[left].priority ? right : left
     }
 
     return node
   }
 
-  const isEmpty = (): boolean => {
-    return heap.length === 0
-  }
+  const isEmpty = (): boolean => heap.length === 0
 
   return Object.freeze({
     enqueue,
