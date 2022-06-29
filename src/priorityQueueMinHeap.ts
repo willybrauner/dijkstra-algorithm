@@ -49,10 +49,8 @@ export function priorityQueueMinHeap<T>() {
 
     while (node.priority < heap?.[parentNodeIndex]?.priority) {
       // invert parent node and node in heap
+      _swapPositionsInHeapByIndex(nodeIndex, parentNodeIndex)
       // update there indexs
-      const parentNode = heap[parentNodeIndex]
-      heap[parentNodeIndex] = node
-      heap[nodeIndex] = parentNode
       nodeIndex = parentNodeIndex
       parentNodeIndex = Math.floor(nodeIndex / 2)
     }
@@ -61,8 +59,6 @@ export function priorityQueueMinHeap<T>() {
   /**
    * dequeue
    * Remove item from heap
-   * - La priorité du nœud inséré ne peut pas être supérieure à celle de son parent.
-     - Chaque niveau du tas doit être plein, sauf le niveau le plus bas, qui se remplit de gauche à droite.
    */
   const dequeue = () => {
     if (heap.length < 3) {
@@ -71,25 +67,23 @@ export function priorityQueueMinHeap<T>() {
       return node
     }
 
-    // La première étape consiste à supprimer le dernier élément
-    // du tas et à le définir comme premier élément.
+    // Remove last heap item and insert it as first item of the heap
     const node = heap[1]
     let x = heap.pop()
     heap[1] = x
 
-    log(node, heap)
-
     let index = 1
+    // We need to get the smallest value index of left/right pair
     let [left, right] = [2 * index, 2 * index + 1]
-    let childIndex = heap[right]?.priority >= heap[left].priority ? right : left
+    let childIndex = heap[right]?.priority <= heap[left]?.priority ? right : left
     
-    while (!!heap[childIndex] && heap[index].priority <= heap[childIndex].priority) {
+    while (heap[index].priority >= heap?.[childIndex].priority) {
       // invert child node and node in heap
-      // update there indexs
       _swapPositionsInHeapByIndex(index, childIndex)
+      // update there indexs (we need to re evaluate left and right)
       index = childIndex
       let [left, right] = [2 * index, 2 * index + 1]
-      childIndex = heap[right]?.priority >= heap[left].priority ? right : left
+      childIndex = heap[right]?.priority <= heap[left]?.priority ? right : left
     }
 
     return node
