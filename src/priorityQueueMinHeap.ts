@@ -1,3 +1,4 @@
+import { TItemKey } from './types';
 const { log } = console
 
 /**
@@ -20,26 +21,26 @@ const { log } = console
  *
  * @doc: https://en.wikipedia.org/wiki/Heap_(data_structure)
  */
-export function priorityQueueMinHeap<T>() {
+export function priorityQueueMinHeap<K = any>() {
   const heap = [null]
 
   /**
    * Swipe positions in heap by index
-   * @param i 
-   * @param j 
+   * @param i
+   * @param j
    */
-  const _swapPositionsInHeapByIndex = (i:number,j:number): void => {
-    let x = heap[i];
-    heap[i] = heap[j];
-    heap[j] = x;
+  const _swapPositionsInHeapByIndex = (i: number, j: number): void => {
+    let x = heap[i]
+    heap[i] = heap[j]
+    heap[j] = x
   }
 
   /**
    * enqueue
    * Insert value is priority in appropriate position in heap
    */
-  const enqueue = (key: string, priority: number): void => {
-    const node = { key, priority }
+  const enqueue = (key: any, priority: number): void => {
+    const node = { key, priority } as TItemKey<K>
     // push new node in heap (at the end of heap)
     // get new current node index (at the last position of heap array)
     // get parent index (is current (index / 2) AND floor to round down the value)
@@ -47,10 +48,10 @@ export function priorityQueueMinHeap<T>() {
     let nodeIndex = heap.length - 1
     let parentNodeIndex = Math.floor(nodeIndex / 2)
 
-    while (node.priority < heap?.[parentNodeIndex]?.priority) {
+    while (node.priority < heap[parentNodeIndex]?.priority) {
       // invert parent node and node in heap
-      _swapPositionsInHeapByIndex(nodeIndex, parentNodeIndex)
       // update there indexs
+      _swapPositionsInHeapByIndex(nodeIndex, parentNodeIndex)
       nodeIndex = parentNodeIndex
       parentNodeIndex = Math.floor(nodeIndex / 2)
     }
@@ -60,7 +61,7 @@ export function priorityQueueMinHeap<T>() {
    * dequeue
    * Remove item from heap
    */
-  const dequeue = () => {
+  const dequeue = (): TItemKey<K> => {
     if (heap.length < 3) {
       const node = heap.pop()
       heap[0] = null
@@ -72,20 +73,19 @@ export function priorityQueueMinHeap<T>() {
     let x = heap.pop()
     heap[1] = x
 
-    let index = 1
     // We need to get the smallest value index of left/right pair
+    let index = 1
     let [left, right] = [2 * index, 2 * index + 1]
     let childIndex = heap[right]?.priority <= heap[left]?.priority ? right : left
-    
-    while (heap[index].priority >= heap?.[childIndex].priority) {
+
+    while (heap[childIndex] && heap[index].priority >= heap[childIndex].priority) {
       // invert child node and node in heap
-      _swapPositionsInHeapByIndex(index, childIndex)
       // update there indexs (we need to re evaluate left and right)
+      _swapPositionsInHeapByIndex(index, childIndex)
       index = childIndex
       let [left, right] = [2 * index, 2 * index + 1]
       childIndex = heap[right]?.priority <= heap[left]?.priority ? right : left
     }
-
     return node
   }
 
